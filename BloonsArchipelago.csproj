@@ -12,6 +12,10 @@
     <ItemGroup>
         <Content Include=".github\workflows\build.yml" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Archipelago.MultiClient.Net" Version="5.0.6" />
+      <PackageReference Include="ILRepack.Lib.MSBuild" Version="2.1.18" />
+    </ItemGroup>
 
     <Import Project="..\btd6.targets" />
 </Project>

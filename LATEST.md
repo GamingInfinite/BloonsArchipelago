@@ -1,1 +1,1 @@
-When you push a tag to GitHub, the contents of this file will become your release message
+Literally just connects to Servers now.  Not even the right game, so don't even bother.  This is just an automatic build.
