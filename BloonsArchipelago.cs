@@ -5,6 +5,14 @@ using BTD_Mod_Helper.Api.ModOptions;
 using System;
 using MelonLoader;
 using Archipelago.MultiClient.Net.Enums;
+using System.Collections.Generic;
+using Archipelago.MultiClient.Net.Models;
+using static Il2CppFacepunch.Steamworks.Inventory;
+using Il2CppAssets.Scripts.Data.MapSets;
+using BTD_Mod_Helper.Extensions;
+using Il2CppAssets.Scripts.Unity;
+using BloonsArchipelago.Utils;
+using Archipelago.MultiClient.Net.Packets;
 
 [assembly: MelonInfo(typeof(BloonsArchipelago.BloonsArchipelago), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -13,7 +21,21 @@ namespace BloonsArchipelago;
 
 public class BloonsArchipelago : BloonsTD6Mod
 {
-    static ArchipelagoSession? session;
+    public static ArchipelagoSession? session;
+    public static bool sessionReady = false;
+    public static string CurrentMap = "";
+    public static string CurrentMode = "";
+
+    public static MapDetails[] defaultMapList;
+
+    public static List<string> Players = new List<string>();
+    public static List<string> MapsUnlocked = new List<string>();
+    public static string VictoryMap;
+    public static long MedalRequirement = 0;
+    public static long Difficulty;
+    public static int Medals = 0;
+
+    public static ArchipelagoXP XPTracker;
 
     public override void OnApplicationStart()
     {
@@ -31,7 +53,7 @@ public class BloonsArchipelago : BloonsTD6Mod
 
         try
         {
-            result = session.TryConnectAndLogin("Stardew Valley", archipelagoSlot, ItemsHandlingFlags.AllItems);
+            result = session.TryConnectAndLogin("Bloons TD6", archipelagoSlot, ItemsHandlingFlags.AllItems);
         }
         catch (Exception ex)
         {
@@ -49,15 +71,65 @@ public class BloonsArchipelago : BloonsTD6Mod
             return;
         }
 
-        var loginSuccess = (LoginSuccessful)result;
-        HandleSession();
+        sessionReady = true;
+
+        LoginSuccessful loginSuccess = (LoginSuccessful)result;
+        HandleSession(loginSuccess.SlotData);
     });
 
-    private static void HandleSession()
+    private static void HandleSession(Dictionary<string, object> slotData)
     {
-        foreach (var item in session.Players.AllPlayers)
+        session.Items.ItemReceived += (receivedItemsHelper) =>
         {
-            ModHelper.Msg<BloonsArchipelago>(item.Alias + " - " + item.Game);
+            var itemReceivedName = receivedItemsHelper.PeekItemName();
+            ModHelper.Msg<BloonsArchipelago>(itemReceivedName + " Recieved from Server");
+            if (itemReceivedName.Contains("-Unlock")) 
+            { 
+                MapsUnlocked.Add(itemReceivedName.Replace("-Unlock", ""));
+            } else if (itemReceivedName == "Medal")
+            {
+                Medals++;
+            }
+            receivedItemsHelper.DequeueItem();
+        };
+
+        foreach (NetworkItem item in session.Items.AllItemsReceived)
+        {
+            long itemId = item.Item;
+            string itemName = session.Items.GetItemName(itemId);
+            ModHelper.Msg<BloonsArchipelago>(itemName + " From Previous Play Session");
+            if (itemName.Contains("-Unlock"))
+            {
+                MapsUnlocked.Add(itemName.Replace("-Unlock", ""));
+            } else if (itemName == "Medal")
+            {
+                Medals++;
+            }
         }
+
+        if (session.DataStorage["XP"])
+        {
+            XPTracker = new ArchipelagoXP(session.DataStorage["Level"], session.DataStorage["XP"],(Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
+        } else
+        {
+            XPTracker = new ArchipelagoXP((Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
+        }
+        ModHelper.Msg<BloonsArchipelago>(slotData["medalsNeeded"] + " Medals Required to Unlock " + slotData["victoryLocation"]);
+
+        VictoryMap = (string)slotData["victoryLocation"];
+        MedalRequirement = (Int64)slotData["medalsNeeded"];
+        Difficulty = (Int64)slotData["difficulty"];
+    }
+
+    public static void CompleteCheck(string checkstring)
+    {
+        session.Locations.CompleteLocationChecks(session.Locations.GetLocationIdFromName("Bloons TD6",checkstring));
+    }
+
+    public static void CompleteRando()
+    {
+        var statusUpdatePackage = new StatusUpdatePacket();
+        statusUpdatePackage.Status = ArchipelagoClientState.ClientGoal;
+        session.Socket.SendPacket(statusUpdatePackage);
     }
 }
