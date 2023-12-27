@@ -8,6 +8,8 @@
         <LangVersion>preview</LangVersion>
         <Optimize>False</Optimize>
         <DebugType>embedded</DebugType>
+
+      <DoILRepack>false</DoILRepack>
     </PropertyGroup>
     <ItemGroup>
         <Content Include=".github\workflows\build.yml" />

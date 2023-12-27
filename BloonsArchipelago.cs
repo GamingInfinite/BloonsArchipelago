@@ -13,6 +13,7 @@ using BTD_Mod_Helper.Extensions;
 using Il2CppAssets.Scripts.Unity;
 using BloonsArchipelago.Utils;
 using Archipelago.MultiClient.Net.Packets;
+using BloonsArchipelago.Patches;
 
 [assembly: MelonInfo(typeof(BloonsArchipelago.BloonsArchipelago), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -36,6 +37,7 @@ public class BloonsArchipelago : BloonsTD6Mod
     public static int Medals = 0;
 
     public static ArchipelagoXP XPTracker;
+    public static TrapPatches Traps = new TrapPatches();
 
     public override void OnApplicationStart()
     {
