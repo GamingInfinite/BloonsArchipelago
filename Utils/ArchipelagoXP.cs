@@ -31,20 +31,20 @@ namespace BloonsArchipelago.Utils
 
         public void PassXP(float XP)
         {
-            if (Level == MaxLevel)
-            {
-                return;
-            }
-
             this.XP += XP;
             
-            if (this.XP > XPToNext)
+            while (this.XP > XPToNext && Level < MaxLevel)
             {
                 this.XP -= XPToNext;
                 Level++;
                 BloonsArchipelago.CompleteCheck("Level " + Level);
-                
             }
+
+            if (Level == MaxLevel)
+            {
+                Maxed = true;
+            }
+
             BloonsArchipelago.session.DataStorage["Level"] = Level;
             BloonsArchipelago.session.DataStorage["XP"] = this.XP;
         }
