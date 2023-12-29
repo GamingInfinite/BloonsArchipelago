@@ -1,10 +1,5 @@
 ﻿using HarmonyLib;
 using Il2CppAssets.Scripts.Unity.Player;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BloonsArchipelago.Patches
 {

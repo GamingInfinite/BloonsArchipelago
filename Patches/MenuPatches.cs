@@ -14,7 +14,6 @@ using Il2CppAssets.Scripts.Unity.UI_New.Main.MapSelect;
 using Il2CppAssets.Scripts.Unity.UI_New.Main.ModeSelect;
 using Il2CppAssets.Scripts.Unity.UI_New.Main.PlayerInfo;
 using Il2CppAssets.Scripts.Unity.UI_New.Popups;
-using Il2CppAssets.Scripts.Utils;
 using Il2CppSystem;
 using System;
 using System.Collections.Generic;
@@ -114,7 +113,6 @@ namespace BloonsArchipelago.Patches
         private static void Postfix(MapButton __instance)
         {
             BloonsArchipelago.CurrentMap = __instance.mapId;
-            ModHelper.Msg<BloonsArchipelago>(__instance.isLocked);
         }
     }
 
@@ -240,7 +238,6 @@ namespace BloonsArchipelago.Patches
         [HarmonyPrefix]
         private static void Prefix(Popup __instance,ref string title)
         {
-            ModHelper.Msg<BloonsArchipelago>(title);
             if (BloonsArchipelago.sessionReady && title == "Unlocking Maps")
             {
                 title = "Victory Map";
@@ -254,7 +251,6 @@ namespace BloonsArchipelago.Patches
         [HarmonyPrefix]
         private static bool Prefix(Popup __instance)
         {
-            ModHelper.Msg<BloonsArchipelago>(__instance.title.text);
             if (BloonsArchipelago.sessionReady && __instance.title.text == "Victory Map")
             {
                 __instance.body.text = "Sorry Chief! I'm only supposed to let you in once you have " + BloonsArchipelago.MedalRequirement + " Medals!";

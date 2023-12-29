@@ -7,10 +7,7 @@ using MelonLoader;
 using Archipelago.MultiClient.Net.Enums;
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Models;
-using static Il2CppFacepunch.Steamworks.Inventory;
 using Il2CppAssets.Scripts.Data.MapSets;
-using BTD_Mod_Helper.Extensions;
-using Il2CppAssets.Scripts.Unity;
 using BloonsArchipelago.Utils;
 using Archipelago.MultiClient.Net.Packets;
 using BloonsArchipelago.Patches;
@@ -31,6 +28,7 @@ public class BloonsArchipelago : BloonsTD6Mod
 
     public static List<string> Players = new List<string>();
     public static List<string> MapsUnlocked = new List<string>();
+    public static List<string> MonkeysUnlocked = new List<string>();
     public static string VictoryMap;
     public static long MedalRequirement = 0;
     public static long Difficulty;
@@ -85,9 +83,11 @@ public class BloonsArchipelago : BloonsTD6Mod
         {
             var itemReceivedName = receivedItemsHelper.PeekItemName();
             ModHelper.Msg<BloonsArchipelago>(itemReceivedName + " Recieved from Server");
-            if (itemReceivedName.Contains("-Unlock")) 
-            { 
-                MapsUnlocked.Add(itemReceivedName.Replace("-Unlock", ""));
+            if (itemReceivedName.Contains("-MUnlock"))
+            {
+                MapsUnlocked.Add(itemReceivedName.Replace("-MUnlock", ""));
+            } else if (itemReceivedName.Contains("-TUnlock")) {
+                MonkeysUnlocked.Add(itemReceivedName.Replace("-TUnlock", ""));
             } else if (itemReceivedName == "Medal")
             {
                 Medals++;
