@@ -1,4 +1,6 @@
-﻿namespace BloonsArchipelago.Utils
+﻿using System;
+
+namespace BloonsArchipelago.Utils
 {
     public class ArchipelagoXP
     {
@@ -25,7 +27,7 @@
 
         public void PassXP(float XP)
         {
-            this.XP += XP;
+            this.XP += (float)Math.Round(XP);
             
             while (this.XP > XPToNext && Level < MaxLevel)
             {

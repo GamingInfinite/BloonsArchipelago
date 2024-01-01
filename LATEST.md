@@ -1,7 +1,11 @@
-# Features
-- Monkey Randomization
+# New Features
+- Location Tracker: Only shows Map Medals that you've completed for the randomizer.
+- Item Notifications: Shows items that you receive in the top left during gameplay
 
-Thats literally it this update.  I'd do more but this is a significant *breaking* change in the code as the new standard will be playing with monkey and map randomization.
-Please finish any games that you have going on currently before updating your client.
+# Bug Fixes
+- Map Screen should no longer show white maps when connecting to Archipelago before previously opening the map screen.
 
-For setup information please check the Readme.  If it isn't there yet I haven't bothered, and I'll get to it eventually.  Just ask me in the discord about setup stuff its early morning and I'm tired.
+# Known Bugs
+- Location Tracker does not update properly across pages (Open and close a map in the page to refresh accurate data).
+
+For setup information please check the Readme

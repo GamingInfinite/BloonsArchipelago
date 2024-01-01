@@ -11,6 +11,9 @@ using Il2CppAssets.Scripts.Data.MapSets;
 using BloonsArchipelago.Utils;
 using Archipelago.MultiClient.Net.Packets;
 using BloonsArchipelago.Patches;
+using Il2CppAssets.Scripts.Unity;
+using BTD_Mod_Helper.Extensions;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 
 [assembly: MelonInfo(typeof(BloonsArchipelago.BloonsArchipelago), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -82,7 +85,12 @@ public class BloonsArchipelago : BloonsTD6Mod
         session.Items.ItemReceived += (receivedItemsHelper) =>
         {
             var itemReceivedName = receivedItemsHelper.PeekItemName();
+            var itemReceivedPlayer = session.Players.GetPlayerAlias(receivedItemsHelper.PeekItem().Player);
             ModHelper.Msg<BloonsArchipelago>(itemReceivedName + " Recieved from Server");
+            if (InGame.instance != null)
+            {
+                Game.instance.ShowMessage("You've received " + itemReceivedName + " from " +  itemReceivedPlayer, 20f);
+            }
             if (itemReceivedName.Contains("-MUnlock"))
             {
                 MapsUnlocked.Add(itemReceivedName.Replace("-MUnlock", ""));
@@ -94,20 +102,6 @@ public class BloonsArchipelago : BloonsTD6Mod
             }
             receivedItemsHelper.DequeueItem();
         };
-
-        foreach (NetworkItem item in session.Items.AllItemsReceived)
-        {
-            long itemId = item.Item;
-            string itemName = session.Items.GetItemName(itemId);
-            ModHelper.Msg<BloonsArchipelago>(itemName + " From Previous Play Session");
-            if (itemName.Contains("-Unlock"))
-            {
-                MapsUnlocked.Add(itemName.Replace("-Unlock", ""));
-            } else if (itemName == "Medal")
-            {
-                Medals++;
-            }
-        }
 
         if (session.DataStorage["XP"])
         {

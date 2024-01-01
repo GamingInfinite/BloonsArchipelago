@@ -72,12 +72,17 @@ namespace BloonsArchipelago.Patches
         {
             if (BloonsArchipelago.sessionReady)
             {
+                MapDetails[] mapArr;
                 if (BloonsArchipelago.defaultMapList == null)
                 {
                     BloonsArchipelago.defaultMapList = GameData._instance.mapSet.Maps.items;
+                    mapArr = (MapDetails[])System.Array.CreateInstance(typeof(MapDetails), GameData._instance.mapSet.Maps.items.Length);
+                    System.Array.Copy(GameData._instance.mapSet.Maps.items, mapArr, GameData._instance.mapSet.Maps.items.Length);
+                } else
+                {
+                    mapArr = (MapDetails[])System.Array.CreateInstance(typeof(MapDetails), BloonsArchipelago.defaultMapList.Length);
+                    System.Array.Copy(BloonsArchipelago.defaultMapList, mapArr, BloonsArchipelago.defaultMapList.Length);
                 }
-                MapDetails[] mapArr = (MapDetails[])System.Array.CreateInstance(typeof(MapDetails), BloonsArchipelago.defaultMapList.Length);
-                System.Array.Copy(BloonsArchipelago.defaultMapList, mapArr, BloonsArchipelago.defaultMapList.Length);
                 List<MapDetails> mapArrayList = new List<MapDetails>();
                 string[] mapsInSeed = BloonsArchipelago.MapsUnlocked.ToArray();
 
@@ -95,9 +100,45 @@ namespace BloonsArchipelago.Patches
         }
     }
 
+    //Adjusting Difficulties for Randomizer Difficulty
+    //[HarmonyPatch(typeof(ModeButton), nameof(ModeButton.Initialise))]
+    //internal class ModeButtonLock
+    //{
+    //    [HarmonyPostfix]
+    //    private static void Postfix(ModeButton __instance)
+    //    {
+    //        if (BloonsArchipelago.sessionReady)
+    //        {
+    //            __instance.Lock();
+    //            if (BloonsArchipelago.Difficulty >= 4)
+    //            {
+    //                if (__instance.modeType == "Standard")
+    //                {
+    //                    __instance.Unlock();
+    //                }
+    //                else if (__instance.modeType == "Impoppable")
+    //                {
+    //                    __instance.Unlock();
+    //                }
+    //            }
+    //            if (BloonsArchipelago.Difficulty >= 5)
+    //            {
+    //                if (__instance.modeType == "Clicks")
+    //                {
+    //                    __instance.Unlock();
+    //                }
+    //            }
+    //            if (BloonsArchipelago.Difficulty == 14)
+    //            {
+    //                __instance.Unlock();
+    //            }
+    //        }
+    //    }
+    //}
+
     //Tracking Current Map and Mode
     [HarmonyPatch(typeof(ModeButton), nameof(ModeButton.ButtonClicked))]
-    internal class ModePatch
+    internal class GetCurrentMode
     {
         [HarmonyPostfix]
         private static void Postfix(ModeButton __instance)
@@ -125,6 +166,22 @@ namespace BloonsArchipelago.Patches
         {
             if (BloonsArchipelago.sessionReady)
             {
+                //Adding Sprite to Victory Map
+                //Sprite VMapIcon = ModContent.GetSprite<BloonsArchipelago>("ArchipelagoLogo", 50);
+                //GameObject VMapIconObject = UnityEngine.Object.Instantiate(__instance.mapImage.gameObject, __instance.gameObject.transform);
+                //VMapIconObject.GetComponent<Image>().SetSprite(VMapIcon);
+                //VMapIconObject.GetComponent<Image>().transform.localScale = new Vector3(0.3f, 0.5f, 1f);
+                //VMapIconObject.transform.localPosition = new Vector3(-400, 320, 0);
+                //if (__instance.mapId == BloonsArchipelago.VictoryMap)
+                //{
+                //    VMapIconObject.gameObject.SetActive(true);
+                //}
+                //else
+                //{
+                //    VMapIconObject.gameObject.SetActive(false);
+                //}
+
+                //Actual stuff related to the map being unlocked or not
                 if (__instance.mapId == BloonsArchipelago.VictoryMap && BloonsArchipelago.MedalRequirement > BloonsArchipelago.Medals)
                 {
                     __instance.isLocked = true;
@@ -136,6 +193,28 @@ namespace BloonsArchipelago.Patches
                     __instance.gameObject.transform.GetChild(6).gameObject.SetActive(false);
                 }
                 return false;
+            }
+            return true;
+        }
+    }
+
+    //Track Medals
+    [HarmonyPatch(typeof(MapButton), nameof(MapButton.SetMedal))]
+    internal class MedalTracker
+    {
+        [HarmonyPrefix]
+        private static bool Prefix(string mapId, string difficulty, string mode)
+        {
+            
+            string newMode = mode;
+            if (mode == "Standard")
+            {
+                newMode = difficulty;
+            }
+            if (BloonsArchipelago.sessionReady)
+            {
+                bool collected = BloonsArchipelago.session.Locations.AllLocationsChecked.Contains(BloonsArchipelago.session.Locations.GetLocationIdFromName("Bloons TD6", mapId + "-" + newMode));
+                return collected;
             }
             return true;
         }
@@ -184,7 +263,6 @@ namespace BloonsArchipelago.Patches
                     __instance.difficulty.text = "You have just beaten the Randomizer! Congragulations!";
                     return;
                 }
-                __instance.difficulty.text = "You have just aquired ";
                 BloonsArchipelago.CompleteCheck(checkstring);
             }
         }
@@ -232,6 +310,7 @@ namespace BloonsArchipelago.Patches
         }
     }
 
+    //Modifying Popups
     [HarmonyPatch(typeof(Popup), nameof(Popup.SetTitle))]
     internal class LockedPopupTitlePatch
     {
@@ -260,6 +339,7 @@ namespace BloonsArchipelago.Patches
         }
     }
 
+    //Making Continues Work (Needs to track whether or not the continue was made during archipelago or not)
     [HarmonyPatch(typeof(ContinueGamePanel), nameof(ContinueGamePanel.ContinueClicked))]
     internal class ContinuePatch
     {
