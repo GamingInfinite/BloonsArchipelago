@@ -14,6 +14,8 @@ using BloonsArchipelago.Patches;
 using Il2CppAssets.Scripts.Unity;
 using BTD_Mod_Helper.Extensions;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
+using System.Linq;
+using Harmony;
 
 [assembly: MelonInfo(typeof(BloonsArchipelago.BloonsArchipelago), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -39,6 +41,8 @@ public class BloonsArchipelago : BloonsTD6Mod
 
     public static ArchipelagoXP XPTracker;
     public static TrapPatches Traps = new TrapPatches();
+
+    private static List<string> notifications = new List<string>();
 
     public override void OnApplicationStart()
     {
@@ -80,17 +84,36 @@ public class BloonsArchipelago : BloonsTD6Mod
         HandleSession(loginSuccess.SlotData);
     });
 
+    public override void OnUpdate()
+    {
+        if (InGame.instance == null) return;
+
+        List<string> previousNotifs = session.DataStorage["Notifs"];
+
+        for (int i = 0; i < notifications.Count; i++)
+        {
+            var notification = notifications[i];
+            if (!previousNotifs.Contains(notification))
+            {
+                Game.instance.ShowMessage(notification, 5f, "Archipelago");
+                notifications.Remove(notification);
+                i--;
+                previousNotifs.Add(notification);
+            }
+            session.DataStorage["Notifs"] = previousNotifs;
+        }
+    }
+
     private static void HandleSession(Dictionary<string, object> slotData)
     {
         session.Items.ItemReceived += (receivedItemsHelper) =>
         {
+            var item = receivedItemsHelper.PeekItem();
             var itemReceivedName = receivedItemsHelper.PeekItemName();
-            var itemReceivedPlayer = session.Players.GetPlayerAlias(receivedItemsHelper.PeekItem().Player);
+            var itemReceivedPlayer = session.Players.GetPlayerAlias(item.Player);
+            var itemReceivedLocation = session.Locations.GetLocationNameFromId(item.Location);
             ModHelper.Msg<BloonsArchipelago>(itemReceivedName + " Recieved from Server");
-            if (InGame.instance != null)
-            {
-                Game.instance.ShowMessage("You've received " + itemReceivedName + " from " +  itemReceivedPlayer, 20f);
-            }
+            notifications.Add("You've received " + itemReceivedName + " from " + itemReceivedPlayer + " at " + itemReceivedLocation);
             if (itemReceivedName.Contains("-MUnlock"))
             {
                 MapsUnlocked.Add(itemReceivedName.Replace("-MUnlock", ""));

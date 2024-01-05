@@ -15,6 +15,10 @@ namespace BloonsArchipelago.Patches
                 {
                     __result = TowerPurchaseLockState.HasntBeenAquired;
                     return false;
+                } else
+                {
+                    __result = TowerPurchaseLockState.Available;
+                    return false;
                 }
             }
             return true;
