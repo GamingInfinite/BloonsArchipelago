@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BTD_Mod_Helper;
+using HarmonyLib;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame.StoreMenu;
 
 namespace BloonsArchipelago.Patches
@@ -15,7 +16,12 @@ namespace BloonsArchipelago.Patches
                 {
                     __result = TowerPurchaseLockState.HasntBeenAquired;
                     return false;
-                } else
+                }
+                else if (__instance.isHero)
+                {
+                    return true;
+                }
+                else
                 {
                     __result = TowerPurchaseLockState.Available;
                     return false;

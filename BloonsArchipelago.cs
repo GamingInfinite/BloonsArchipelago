@@ -88,7 +88,7 @@ public class BloonsArchipelago : BloonsTD6Mod
     {
         if (InGame.instance == null) return;
 
-        List<string> previousNotifs = session.DataStorage["Notifs"];
+        List<string> previousNotifs = (session != null ? session.DataStorage["Notifs"]: new List<string>());
 
         for (int i = 0; i < notifications.Count; i++)
         {
