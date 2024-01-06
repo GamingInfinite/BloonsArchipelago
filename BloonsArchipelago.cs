@@ -16,6 +16,7 @@ using BTD_Mod_Helper.Extensions;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using System.Linq;
 using Harmony;
+using System.Threading.Tasks;
 
 [assembly: MelonInfo(typeof(BloonsArchipelago.BloonsArchipelago), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -34,6 +35,9 @@ public class BloonsArchipelago : BloonsTD6Mod
     public static List<string> Players = new List<string>();
     public static List<string> MapsUnlocked = new List<string>();
     public static List<string> MonkeysUnlocked = new List<string>();
+
+    public static List<string> previousNotifs = new List<string>();
+
     public static string VictoryMap;
     public static long MedalRequirement = 0;
     public static long Difficulty;
@@ -88,8 +92,6 @@ public class BloonsArchipelago : BloonsTD6Mod
     {
         if (InGame.instance == null) return;
 
-        List<string> previousNotifs = (session != null ? session.DataStorage["Notifs"]: new List<string>());
-
         for (int i = 0; i < notifications.Count; i++)
         {
             var notification = notifications[i];
@@ -100,8 +102,16 @@ public class BloonsArchipelago : BloonsTD6Mod
                 i--;
                 previousNotifs.Add(notification);
             }
-            session.DataStorage["Notifs"] = previousNotifs;
+            UpdateServerNotifications();
         }
+    }
+
+    public async void UpdateServerNotifications()
+    {
+        await Task.Run(() =>
+        {
+            session.DataStorage["Notifs"] = previousNotifs;
+        });
     }
 
     private static void HandleSession(Dictionary<string, object> slotData)
@@ -125,6 +135,8 @@ public class BloonsArchipelago : BloonsTD6Mod
             }
             receivedItemsHelper.DequeueItem();
         };
+
+        previousNotifs = session.DataStorage["Notifs"];
 
         if (session.DataStorage["XP"])
         {

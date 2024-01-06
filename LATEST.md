@@ -1,3 +1,4 @@
-I don't want to update this for a hotfix
+# Bug Fixes
+- Small bug hurting performance when using a remote server due to notifications.  Should be fixed
 
 For setup information please check the Readme
