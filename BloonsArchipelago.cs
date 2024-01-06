@@ -95,24 +95,24 @@ public class BloonsArchipelago : BloonsTD6Mod
         for (int i = 0; i < notifications.Count; i++)
         {
             var notification = notifications[i];
-            if (!previousNotifs.Contains(notification))
-            {
+            //if (!previousNotifs.Contains(notification))
+            //{
                 Game.instance.ShowMessage(notification, 5f, "Archipelago");
                 notifications.Remove(notification);
                 i--;
-                previousNotifs.Add(notification);
-            }
-            UpdateServerNotifications();
+                //previousNotifs.Add(notification);
+            //}
+            //UpdateServerNotifications();
         }
     }
 
-    public async void UpdateServerNotifications()
-    {
-        await Task.Run(() =>
-        {
-            session.DataStorage["Notifs"] = previousNotifs;
-        });
-    }
+    //public async void UpdateServerNotifications()
+    //{
+    //    await Task.Run(() =>
+    //    {
+    //        session.DataStorage["Notifs"] = previousNotifs;
+    //    });
+    //}
 
     private static void HandleSession(Dictionary<string, object> slotData)
     {
