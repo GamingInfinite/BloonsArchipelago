@@ -6,7 +6,6 @@ using System;
 using MelonLoader;
 using Archipelago.MultiClient.Net.Enums;
 using System.Collections.Generic;
-using Archipelago.MultiClient.Net.Models;
 using Il2CppAssets.Scripts.Data.MapSets;
 using BloonsArchipelago.Utils;
 using Archipelago.MultiClient.Net.Packets;
@@ -14,9 +13,9 @@ using BloonsArchipelago.Patches;
 using Il2CppAssets.Scripts.Unity;
 using BTD_Mod_Helper.Extensions;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
-using System.Linq;
-using Harmony;
-using System.Threading.Tasks;
+using System.IO;
+using BTD_Mod_Helper.Api;
+using System.Text.Json;
 
 [assembly: MelonInfo(typeof(BloonsArchipelago.BloonsArchipelago), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -26,6 +25,7 @@ namespace BloonsArchipelago;
 public class BloonsArchipelago : BloonsTD6Mod
 {
     public static ArchipelagoSession? session;
+    public static string apWorldID = "";
     public static bool sessionReady = false;
     public static string CurrentMap = "";
     public static string CurrentMode = "";
@@ -36,6 +36,7 @@ public class BloonsArchipelago : BloonsTD6Mod
     public static List<string> MapsUnlocked = new List<string>();
     public static List<string> MonkeysUnlocked = new List<string>();
 
+    public static NotificationJSON notifJSON;
     public static List<string> previousNotifs = new List<string>();
 
     public static string VictoryMap;
@@ -51,6 +52,27 @@ public class BloonsArchipelago : BloonsTD6Mod
     public override void OnApplicationStart()
     {
         ModHelper.Msg<BloonsArchipelago>("Bloons Archipelago loaded!");
+        string modPath = ModContent.GetInstance<BloonsArchipelago>().GetModDirectory();
+
+        if (!Directory.Exists(modPath))
+        {
+            Directory.CreateDirectory(modPath);
+        }
+
+        string filePath = Path.Combine(modPath, "Notifications.json");
+        if (File.Exists(filePath))
+        {
+            var JSONString = File.ReadAllText(filePath);
+            var NotifObject = JsonSerializer.Deserialize<NotificationJSON>(JSONString);
+
+            notifJSON = NotifObject;
+        } else
+        {
+            notifJSON = new NotificationJSON
+            {
+                APWorlds = new Dictionary<string, string[]>()
+            };
+        }
     }
 
     private static readonly ModSettingString archipelagoIP = "archipelago.gg";
@@ -95,24 +117,18 @@ public class BloonsArchipelago : BloonsTD6Mod
         for (int i = 0; i < notifications.Count; i++)
         {
             var notification = notifications[i];
-            //if (!previousNotifs.Contains(notification))
-            //{
+            if (!previousNotifs.Contains(notification))
+            {
                 Game.instance.ShowMessage(notification, 5f, "Archipelago");
                 notifications.Remove(notification);
                 i--;
-                //previousNotifs.Add(notification);
-            //}
-            //UpdateServerNotifications();
+                previousNotifs.Add(notification);
+            } else
+            {
+                notifications.Remove(notification);
+            }
         }
     }
-
-    //public async void UpdateServerNotifications()
-    //{
-    //    await Task.Run(() =>
-    //    {
-    //        session.DataStorage["Notifs"] = previousNotifs;
-    //    });
-    //}
 
     private static void HandleSession(Dictionary<string, object> slotData)
     {
@@ -127,21 +143,29 @@ public class BloonsArchipelago : BloonsTD6Mod
             if (itemReceivedName.Contains("-MUnlock"))
             {
                 MapsUnlocked.Add(itemReceivedName.Replace("-MUnlock", ""));
-            } else if (itemReceivedName.Contains("-TUnlock")) {
+            }
+            else if (itemReceivedName.Contains("-TUnlock"))
+            {
                 MonkeysUnlocked.Add(itemReceivedName.Replace("-TUnlock", ""));
-            } else if (itemReceivedName == "Medal")
+            }
+            else if (itemReceivedName == "Medal")
             {
                 Medals++;
             }
             receivedItemsHelper.DequeueItem();
         };
 
-        previousNotifs = session.DataStorage["Notifs"];
+        apWorldID = session.RoomState.Seed;
+        if (notifJSON.APWorlds.ContainsKey(apWorldID))
+        {
+            previousNotifs.AddRange(notifJSON.APWorlds[apWorldID]);
+        }
 
         if (session.DataStorage["XP"])
         {
-            XPTracker = new ArchipelagoXP(session.DataStorage["Level"], session.DataStorage["XP"],(Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
-        } else
+            XPTracker = new ArchipelagoXP(session.DataStorage["Level"], session.DataStorage["XP"], (Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
+        }
+        else
         {
             XPTracker = new ArchipelagoXP((Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
         }
@@ -154,7 +178,7 @@ public class BloonsArchipelago : BloonsTD6Mod
 
     public static void CompleteCheck(string checkstring)
     {
-        session.Locations.CompleteLocationChecks(session.Locations.GetLocationIdFromName("Bloons TD6",checkstring));
+        session.Locations.CompleteLocationChecks(session.Locations.GetLocationIdFromName("Bloons TD6", checkstring));
     }
 
     public static void CompleteRando()
@@ -162,5 +186,6 @@ public class BloonsArchipelago : BloonsTD6Mod
         var statusUpdatePackage = new StatusUpdatePacket();
         statusUpdatePackage.Status = ArchipelagoClientState.ClientGoal;
         session.Socket.SendPacket(statusUpdatePackage);
+        notifJSON.APWorlds.Remove(apWorldID);
     }
 }

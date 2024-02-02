@@ -1,4 +1,8 @@
 # Bug Fixes
-- Small bug hurting performance when using a remote server due to notifications.  Should be fixed
+- Notifications no longer cause the APServer to lagout.
+- Buy Buttons are now fixed probably.
+
+# Known Bugs
+- When you complete a randomizer you'll probably see red in the console if someone tries to send you items.  Reason: i'm tired.
 
 For setup information please check the Readme

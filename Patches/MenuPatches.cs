@@ -1,4 +1,5 @@
-﻿using BTD_Mod_Helper;
+﻿using BloonsArchipelago.Utils;
+using BTD_Mod_Helper;
 using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Enums;
 using BTD_Mod_Helper.Extensions;
@@ -17,7 +18,9 @@ using Il2CppAssets.Scripts.Unity.UI_New.Popups;
 using Il2CppSystem;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,6 +40,21 @@ namespace BloonsArchipelago.Patches
                 __instance.achievementsBtn.gameObject.SetActive(false);
                 __instance.coopBtn.gameObject.SetActive(false);
                 __instance.trophyStoreLimitedTimeObj.SetActive(false);
+
+                string modPath = ModContent.GetInstance<BloonsArchipelago>().GetModDirectory();
+
+                var TempAPWorlds = BloonsArchipelago.notifJSON.APWorlds;
+                TempAPWorlds.TryAdd(BloonsArchipelago.apWorldID, BloonsArchipelago.previousNotifs.ToArray());
+                TempAPWorlds[BloonsArchipelago.apWorldID] = BloonsArchipelago.previousNotifs.ToArray();
+                ModHelper.Msg<BloonsArchipelago>(BloonsArchipelago.previousNotifs.Count());
+
+                var NotifObject = new NotificationJSON
+                {
+                    APWorlds = TempAPWorlds,
+                };
+                var JSONString = JsonSerializer.Serialize(NotifObject);
+
+                File.WriteAllText(Path.Combine(modPath, "Notifications.json"), JSONString);
             }
         }
     }

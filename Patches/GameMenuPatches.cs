@@ -1,5 +1,6 @@
-﻿using BTD_Mod_Helper;
+﻿using BTD_Mod_Helper.Extensions;
 using HarmonyLib;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame.StoreMenu;
 
 namespace BloonsArchipelago.Patches
@@ -21,9 +22,14 @@ namespace BloonsArchipelago.Patches
                 {
                     return true;
                 }
-                else
+                else if (__instance.cost <= InGame.instance.GetCash())
                 {
                     __result = TowerPurchaseLockState.Available;
+                    return false;
+                }
+                else
+                {
+                    __result = TowerPurchaseLockState.NotEnoughCash;
                     return false;
                 }
             }
