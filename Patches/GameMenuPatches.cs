@@ -13,7 +13,7 @@ namespace BloonsArchipelago.Patches
         {
             if (BloonsArchipelago.sessionReady)
             {
-                if (!BloonsArchipelago.MonkeysUnlocked.Contains(__instance.ItemId) && !__instance.IsHero)
+                if (!BloonsArchipelago.MonkeysUnlocked.Contains(__instance.towerModel.baseId) && !__instance.IsHero)
                 {
                     __result = TowerPurchaseLockState.HasntBeenAquired;
                     return false;

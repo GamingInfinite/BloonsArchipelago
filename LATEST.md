@@ -1,6 +1,5 @@
 # Bug Fixes
-- Notifications no longer cause the APServer to lagout.
-- Buy Buttons are now fixed probably.
+- Fixed bug introduced in Bloons v41 that made it where the buttons got locked because of a semantics change.
 
 # Known Bugs
 - When you complete a randomizer you'll probably see red in the console if someone tries to send you items.  Reason: i'm tired.
