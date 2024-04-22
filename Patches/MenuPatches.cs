@@ -114,6 +114,13 @@ namespace BloonsArchipelago.Patches
                 }
 
                 GameData._instance.mapSet.Maps.items = mapArrayList.ToArray();
+            } else
+            {
+                for (int i = 0; i < GameData._instance.mapSet.Maps.items.Length; i++)
+                {
+                    MapDetails map = GameData._instance.mapSet.Maps.items[i];
+                    ModHelper.Msg<BloonsArchipelago>(map.id);
+                }
             }
         }
     }
