@@ -1,17 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>BloonsArchipelago</RootNamespace>
-        <Configurations>Debug;Release</Configurations>
-        <Nullable>enable</Nullable>
-        <AssemblyName>BloonsArchipelago</AssemblyName>
-        <LangVersion>latest</LangVersion>
-        <Optimize>False</Optimize>
-        <DebugType>embedded</DebugType>
-    </PropertyGroup>
-    <ItemGroup>
-        <Content Include=".github\workflows\build.yml" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>BloonsArchipelago</RootNamespace>
+    <Configurations>Debug;Release</Configurations>
+    <Nullable>enable</Nullable>
+    <AssemblyName>BloonsArchipelago</AssemblyName>
+    <LangVersion>preview</LangVersion>
+    <Optimize>False</Optimize>
+    <DebugType>embedded</DebugType>
+    <DoILRepack>false</DoILRepack>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".github\workflows\build.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Archipelago.MultiClient.Net" Version="5.0.6" />
+    <PackageReference Include="ILRepack.Lib.MSBuild" Version="2.1.18" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
 
-    <Import Project="..\btd6.targets" />
+  <Import Project="..\btd6.targets" />
 </Project>
