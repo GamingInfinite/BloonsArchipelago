@@ -3,7 +3,7 @@ using HarmonyLib;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame.StoreMenu;
 
-namespace BloonsArchipelago.Patches
+namespace BloonsArchipelago.Patches.InMap
 {
     [HarmonyPatch(typeof(TowerPurchaseButton), nameof(TowerPurchaseButton.GetLockedState))]
     internal class TowerPurchaseButtonPatch

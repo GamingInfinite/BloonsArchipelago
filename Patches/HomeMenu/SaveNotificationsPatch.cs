@@ -24,6 +24,7 @@ namespace BloonsArchipelago.Patches.HomeMenu
 
                 Dictionary<string, string[]> notifDict = BloonsArchipelago.notifJson.APWorlds;
                 notifDict.TryAdd(BloonsArchipelago.sessionHandler.APID, BloonsArchipelago.sessionHandler.previousNotifications.ToArray());
+                notifDict[BloonsArchipelago.sessionHandler.APID] = BloonsArchipelago.sessionHandler.previousNotifications.ToArray();
 
                 var notificationJSON = JsonSerializer.Serialize(new NotificationJSON { APWorlds = notifDict });
                 File.WriteAllText(Path.Combine(modPath, "Notifications.json"), notificationJSON);
