@@ -1,7 +1,14 @@
-# Bug Fixes
-- Recompiled for V42
+# Refactor
+- Full Feature Parity with old version
 
-# Known Bugs
-- When you complete a randomizer you'll probably see red in the console if someone tries to send you items.  Reason: i'm tired.
+# New Features
+- QOL improvement with addition of earlier difficulties being completed when they would in harder difficulties
+
+# Bug Fixes
+- White Map Bug Fixed
+
+# Removed
+- Difficulty Tracker
+- Victory Map Indicator
 
 For setup information please check the Readme
