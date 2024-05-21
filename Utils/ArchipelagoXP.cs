@@ -8,9 +8,9 @@ namespace BloonsArchipelago.Utils
         public float XP = 0.0f;
         public long XPToNext;
         public long MaxLevel;
-        public bool Maxed = false;
+        public bool Maxed = false; //potentially not needed
 
-        public ArchipelagoXP(int Level,  float XP, long XPToNext, long MaxLevel)
+        public ArchipelagoXP(int Level, float XP, long XPToNext, long MaxLevel)
         {
             this.Level = Level;
             this.XP = XP;
@@ -19,7 +19,7 @@ namespace BloonsArchipelago.Utils
             Maxed = Level == MaxLevel;
         }
 
-        public ArchipelagoXP(long XPToNext, long MaxLevel) 
+        public ArchipelagoXP(long XPToNext, long MaxLevel)
         {
             this.XPToNext = XPToNext;
             this.MaxLevel = MaxLevel;
@@ -28,12 +28,12 @@ namespace BloonsArchipelago.Utils
         public void PassXP(float XP)
         {
             this.XP += (float)Math.Round(XP);
-            
+
             while (this.XP > XPToNext && Level < MaxLevel)
             {
                 this.XP -= XPToNext;
                 Level++;
-                BloonsArchipelago.CompleteCheck("Level " + Level);
+                BloonsArchipelago.sessionHandler.CompleteCheck("Level " + Level);
             }
 
             if (Level == MaxLevel)
@@ -41,8 +41,8 @@ namespace BloonsArchipelago.Utils
                 Maxed = true;
             }
 
-            BloonsArchipelago.session.DataStorage["Level"] = Level;
-            BloonsArchipelago.session.DataStorage["XP"] = this.XP;
+            BloonsArchipelago.sessionHandler.session.DataStorage["Level"] = Level;
+            BloonsArchipelago.sessionHandler.session.DataStorage["XP"] = this.XP;
         }
     }
 }

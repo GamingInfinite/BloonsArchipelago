@@ -4,6 +4,6 @@ namespace BloonsArchipelago.Utils
 {
     public class NotificationJSON
     {
-        public Dictionary<string, string[]> APWorlds { get; set; }
+        public Dictionary<string, string[]> APWorlds {  get; set; }
     }
 }
