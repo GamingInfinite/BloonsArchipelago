@@ -42,10 +42,6 @@ namespace BloonsArchipelago.Utils
         public SessionHandler(string url, int port, string slot, string password)
         {
             defaultMapList = GameData._instance.mapSet.Maps.items;
-            foreach (MapDetails map in defaultMapList)
-            {
-                ModHelper.Msg<BloonsArchipelago>(map.id);
-            }
 
             session = ArchipelagoSessionFactory.CreateSession(url, port);
 
@@ -111,11 +107,11 @@ namespace BloonsArchipelago.Utils
             //Setup for XP Passthrough;
             if (session.DataStorage["XP"])
             {
-                XPTracker = new ArchipelagoXP(session.DataStorage["Level"], session.DataStorage["XP"], (Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
+                XPTracker = new ArchipelagoXP(session.DataStorage["Level"], session.DataStorage["XP"], (Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"], (bool)slotData["xpCurve"]);
             }
             else
             {
-                XPTracker = new ArchipelagoXP((Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
+                XPTracker = new ArchipelagoXP((Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"], (bool)slotData["xpCurve"]);
             }
 
             //Set Slot Settings
@@ -144,7 +140,7 @@ namespace BloonsArchipelago.Utils
         public MapDetails[] GetMapDetails()
         {
             List<MapDetails> mapDetails = new();
-            foreach(var map in defaultMapList)
+            foreach (var map in defaultMapList)
             {
                 if (MapsUnlocked.Contains(map.id) || map.id == VictoryMap)
                 {

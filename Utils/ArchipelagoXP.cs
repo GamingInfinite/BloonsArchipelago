@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Il2CppAssets.Scripts.Data;
+using Il2CppAssets.Scripts.Data.Global;
+using System;
 
 namespace BloonsArchipelago.Utils
 {
@@ -9,20 +11,33 @@ namespace BloonsArchipelago.Utils
         public long XPToNext;
         public long MaxLevel;
         public bool Maxed = false; //potentially not needed
+        public bool Curved = false;
 
-        public ArchipelagoXP(int Level, float XP, long XPToNext, long MaxLevel)
+        public ArchipelagoXP(int Level, float XP, long XPToNext, long MaxLevel, bool Curved)
         {
             this.Level = Level;
             this.XP = XP;
             this.XPToNext = XPToNext;
             this.MaxLevel = MaxLevel;
+            this.Curved = Curved;
             Maxed = Level == MaxLevel;
+
+            if (this.Curved)
+            {
+                this.XPToNext = GameData._instance.rankInfo.GetXpDiffForRankFromPrev(Level);
+            }
         }
 
-        public ArchipelagoXP(long XPToNext, long MaxLevel)
+        public ArchipelagoXP(long XPToNext, long MaxLevel, bool Curved)
         {
             this.XPToNext = XPToNext;
             this.MaxLevel = MaxLevel;
+            this.Curved = Curved;
+
+            if (this.Curved)
+            {
+                this.XPToNext = GameData._instance.rankInfo.GetXpDiffForRankFromPrev(1);
+            }
         }
 
         public void PassXP(float XP)
@@ -34,6 +49,10 @@ namespace BloonsArchipelago.Utils
                 this.XP -= XPToNext;
                 Level++;
                 BloonsArchipelago.sessionHandler.CompleteCheck("Level " + Level);
+                if (Curved)
+                {
+                    XPToNext = GameData._instance.rankInfo.GetXpDiffForRankFromPrev(Level);
+                }
             }
 
             if (Level == MaxLevel)

@@ -18,7 +18,6 @@ namespace BloonsArchipelago.Patches.InMap
                     BloonsArchipelago.sessionHandler.currentMode = __instance.SelectedDifficulty;
                 }
 
-                ModHelper.Msg<BloonsArchipelago>(BloonsArchipelago.sessionHandler.currentMode + " " + completedRound);
                 if (completedRound == 39 && new[] { "Medium", "Hard", "Impoppable", "Clicks" }.Contains(BloonsArchipelago.sessionHandler.currentMode))
                 {
                     BloonsArchipelago.sessionHandler.CompleteCheck(BloonsArchipelago.sessionHandler.currentMap + "-Easy");

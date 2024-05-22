@@ -1,14 +1,6 @@
-# Refactor
-- Full Feature Parity with old version
-
 # New Features
-- QOL improvement with addition of earlier difficulties being completed when they would in harder difficulties
+- XP Curve (uses the base game's exp curve)
 
-# Bug Fixes
-- White Map Bug Fixed
-
-# Removed
-- Difficulty Tracker
-- Victory Map Indicator
+PLEASE UPDATE YOUR AP WORLD
 
 For setup information please check the Readme
