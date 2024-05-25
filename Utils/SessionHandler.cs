@@ -149,5 +149,12 @@ namespace BloonsArchipelago.Utils
             }
             return mapDetails.ToArray();
         }
+
+        public string PlayerSlotName()
+        {
+            int slot = session.ConnectionInfo.Slot;
+            string name = session.Players.GetPlayerName(slot);
+            return name;
+        }
     }
 }

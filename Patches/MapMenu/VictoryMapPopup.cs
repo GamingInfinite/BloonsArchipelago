@@ -16,7 +16,7 @@ namespace BloonsArchipelago.Patches.MapMenu
         }
     }
 
-    [HarmonyPatch(typeof(Popup), nameof(Popup.SetBody), new System.Type[] {typeof(string)})]
+    [HarmonyPatch(typeof(Popup), nameof(Popup.SetBody), [typeof(string)])]
     internal class VictoryMapPopupBody
     {
         [HarmonyPrefix]

@@ -60,8 +60,8 @@ namespace BloonsArchipelago.Utils
                 Maxed = true;
             }
 
-            BloonsArchipelago.sessionHandler.session.DataStorage["Level"] = Level;
-            BloonsArchipelago.sessionHandler.session.DataStorage["XP"] = this.XP;
+            BloonsArchipelago.sessionHandler.session.DataStorage["Level-" + BloonsArchipelago.sessionHandler.PlayerSlotName()] = Level;
+            BloonsArchipelago.sessionHandler.session.DataStorage["XP-" + BloonsArchipelago.sessionHandler.PlayerSlotName()] = this.XP;
         }
     }
 }
