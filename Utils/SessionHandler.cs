@@ -25,6 +25,7 @@ namespace BloonsArchipelago.Utils
 
         public List<string> MapsUnlocked = new();
         public List<string> MonkeysUnlocked = new();
+        public List<string> KnowledgeUnlocked = new();
 
         public MapDetails[] defaultMapList;
 
@@ -105,9 +106,9 @@ namespace BloonsArchipelago.Utils
             }
 
             //Setup for XP Passthrough;
-            if (session.DataStorage["XP"])
+            if (session.DataStorage["XP-" + PlayerSlotName()])
             {
-                XPTracker = new ArchipelagoXP(session.DataStorage["Level"], session.DataStorage["XP"], (Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"], (bool)slotData["xpCurve"]);
+                XPTracker = new ArchipelagoXP(session.DataStorage["Level-" + PlayerSlotName()], session.DataStorage["XP-" + PlayerSlotName()], (Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"], (bool)slotData["xpCurve"]);
             }
             else
             {
