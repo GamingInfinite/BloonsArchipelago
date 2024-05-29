@@ -9,11 +9,7 @@ namespace BloonsArchipelago.Patches.BTD6Player
         [HarmonyPrefix]
         private static bool Prefix()
         {
-            if (BloonsArchipelago.sessionHandler.ready)
-            {
-                return false;
-            }
-            return true;
+            return false;
         }
     }
 }

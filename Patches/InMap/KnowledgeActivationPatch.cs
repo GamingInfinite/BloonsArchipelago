@@ -9,20 +9,20 @@ using Il2CppSystem.Collections.Generic;
 
 namespace BloonsArchipelago.Patches.InMap
 {
-    [HarmonyPatch(typeof(ActiveKnowledge), nameof(ActiveKnowledge.Get), [typeof(HashSet<string>), typeof(GameModel)])]
-    internal class KnowledgeActivationPatch
-    {
-        [HarmonyPrefix]
-        private static void Postfix(HashSet<string> knowledges, GameModel gm)
-        {
-            for(int i = 1; i < 5; i++)
-            {
-                KnowledgeModel[] list = KnowledgeHelper.GetKnowledgeForCategory((KnowledgeCategory)i);
-                foreach (var knowledge in list)
-                {
-                    ModHelper.Msg<BloonsArchipelago>(knowledge.name + " " + knowledge.idx);
-                }
-            }
-        }
-    }
+    //[HarmonyPatch(typeof(ActiveKnowledge), nameof(ActiveKnowledge.Get), new[] { typeof(HashSet<string>), typeof(GameModel) })]
+    //internal class KnowledgeActivationPatch
+    //{
+    //    [HarmonyPrefix]
+    //    private static void Postfix(HashSet<string> knowledges, GameModel gm)
+    //    {
+    //        for (int i = 1; i < 5; i++)
+    //        {
+    //            KnowledgeModel[] list = KnowledgeHelper.GetKnowledgeForCategory((KnowledgeCategory)i);
+    //            foreach (var knowledge in list)
+    //            {
+    //                ModHelper.Msg<BloonsArchipelago>(knowledge.name + " " + knowledge.idx);
+    //            }
+    //        }
+    //    }
+    //}
 }
