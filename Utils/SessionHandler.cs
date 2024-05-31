@@ -91,6 +91,10 @@ namespace BloonsArchipelago.Utils
                 {
                     MonkeysUnlocked.Add(itemName.Replace("-TUnlock", ""));
                 }
+                else if (itemName.Contains("-KUnlock"))
+                {
+                    KnowledgeUnlocked.Add(itemName.Replace("-KUnlock", ""));
+                }
                 else if (itemName == "Medal")
                 {
                     Medals++;
