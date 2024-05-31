@@ -149,6 +149,10 @@ namespace BloonsArchipelago.Utils
             {
                 if (MapsUnlocked.Contains(map.id) || map.id == VictoryMap)
                 {
+                    if (!(map.id == VictoryMap))
+                    {
+                        CompleteCheck(map.id + "-Unlock");
+                    }
                     mapDetails.Add(map);
                 }
             }
