@@ -14,7 +14,7 @@
     <Content Include=".github\workflows\build.yml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Archipelago.MultiClient.Net" Version="5.0.6" />
+    <PackageReference Include="Archipelago.MultiClient.Net" Version="6.0.0-rc5" />
     <PackageReference Include="ILRepack.Lib.MSBuild" Version="2.1.18" />
   </ItemGroup>
   <ItemGroup>

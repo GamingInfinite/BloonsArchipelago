@@ -76,28 +76,31 @@ namespace BloonsArchipelago.Utils
             //Setup Item Recieving;
             session.Items.ItemReceived += (receivedItemsHelper) =>
             {
-                NetworkItem item = receivedItemsHelper.PeekItem();
-                string itemName = receivedItemsHelper.PeekItemName();
-                string itemPlayer = session.Players.GetPlayerAlias(item.Player);
-                string itemLocation = session.Locations.GetLocationNameFromId(item.Location);
+                ItemInfo item = receivedItemsHelper.PeekItem();
+                string itemName = item.ItemName;
+                string itemPlayer = item.Player.Name;
+                string itemLocation = item.LocationName;
                 ModHelper.Msg<BloonsArchipelago>(itemName + " Received from Server");
 
                 notifications.Add("You've received " + itemName + " from " + itemPlayer + " at " + itemLocation);
-                if (itemName.Contains("-MUnlock"))
+                if (itemName is not null)
                 {
-                    MapsUnlocked.Add(itemName.Replace("-MUnlock", ""));
-                }
-                else if (itemName.Contains("-TUnlock"))
-                {
-                    MonkeysUnlocked.Add(itemName.Replace("-TUnlock", ""));
-                }
-                else if (itemName.Contains("-KUnlock"))
-                {
-                    KnowledgeUnlocked.Add(itemName.Replace("-KUnlock", ""));
-                }
-                else if (itemName == "Medal")
-                {
-                    Medals++;
+                    if (itemName.Contains("-MUnlock"))
+                    {
+                        MapsUnlocked.Add(itemName.Replace("-MUnlock", ""));
+                    }
+                    else if (itemName.Contains("-TUnlock"))
+                    {
+                        MonkeysUnlocked.Add(itemName.Replace("-TUnlock", ""));
+                    }
+                    else if (itemName.Contains("-KUnlock"))
+                    {
+                        KnowledgeUnlocked.Add(itemName.Replace("-KUnlock", ""));
+                    }
+                    else if (itemName == "Medal")
+                    {
+                        Medals++;
+                    }
                 }
                 receivedItemsHelper.DequeueItem();
             };
