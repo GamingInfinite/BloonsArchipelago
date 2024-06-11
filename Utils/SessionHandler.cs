@@ -145,6 +145,12 @@ namespace BloonsArchipelago.Utils
             BloonsArchipelago.notifJson.APWorlds.Remove(APID);
         }
 
+        public bool LocationChecked(string locationString)
+        {
+            long locationID = session.Locations.GetLocationIdFromName("Bloons TD6",locationString);
+            return session.Locations.AllLocationsChecked.Contains(locationID);
+        }
+
         public MapDetails[] GetMapDetails()
         {
             List<MapDetails> mapDetails = new();

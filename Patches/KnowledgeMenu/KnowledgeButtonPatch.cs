@@ -18,8 +18,7 @@ namespace BloonsArchipelago.Patches.KnowledgeMenu
                 string[] prereqs = model.prerequisiteIds;
                 if (BloonsArchipelago.sessionHandler.KnowledgeUnlocked.Contains(model.name))
                 {
-                    long id = BloonsArchipelago.sessionHandler.session.Locations.GetLocationIdFromName("Bloons TD6", model.name + "-Tree");
-                    if (BloonsArchipelago.sessionHandler.session.Locations.AllLocationsChecked.Contains(id))
+                    if (BloonsArchipelago.sessionHandler.LocationChecked(model.name + "-Tree"))
                     {
                         state = KnowlegdeSkillBtnState.Purchased;
                     }
@@ -28,8 +27,7 @@ namespace BloonsArchipelago.Patches.KnowledgeMenu
                         bool available = true;
                         foreach (string prereq in prereqs)
                         {
-                            long prereqid = BloonsArchipelago.sessionHandler.session.Locations.GetLocationIdFromName("Bloons TD6", prereq + "-Tree");
-                            if (!BloonsArchipelago.sessionHandler.session.Locations.AllLocationsChecked.Contains(prereqid))
+                            if (!BloonsArchipelago.sessionHandler.LocationChecked(prereq + "-Tree"))
                             {
                                 available = false;
                             }
