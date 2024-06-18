@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppAssets.Scripts.Unity;
 using Il2CppAssets.Scripts.Data;
+using UnityEngine;
 
 [assembly: MelonInfo(typeof(BloonsArchipelago.BloonsArchipelago), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -26,6 +27,8 @@ public class BloonsArchipelago : BloonsTD6Mod
     public static NotificationJSON notifJson = new() { APWorlds = new Dictionary<string, string[]>() };
 
     public static SessionHandler sessionHandler = new();
+
+    public static GameObject vMapIndicator = new();
 
     // Mod Settings; Used for Connection Purposes
     static readonly ModSettingString url = "archipelago.gg";
