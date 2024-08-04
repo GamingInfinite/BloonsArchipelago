@@ -1,4 +1,5 @@
-﻿using BTD_Mod_Helper.Api;
+﻿using BTD_Mod_Helper;
+using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Extensions;
 using HarmonyLib;
 using Il2CppAssets.Scripts.Unity.UI_New.Main.MapSelect;
@@ -18,13 +19,14 @@ namespace BloonsArchipelago.Patches.MapMenu
             {
                 if (mapId == BloonsArchipelago.sessionHandler.VictoryMap)
                 {
-                    BloonsArchipelago.vMapIndicator = Object.Instantiate(__instance.continueIcon, __instance.transform.parent);
-                    BloonsArchipelago.vMapIndicator.GetComponent<Image>().sprite = ModContent.GetSprite<BloonsArchipelago>("ArchipelagoLogo", 50);
-                    BloonsArchipelago.vMapIndicator.SetActive(true);
-                    Vector3 oldPos = BloonsArchipelago.vMapIndicator.transform.localPosition;
+                    GameObject vMapIndicator = Object.Instantiate(__instance.continueIcon, __instance.transform.parent);
+                    vMapIndicator.GetComponent<Image>().sprite = ModContent.GetSprite<BloonsArchipelago>("ArchipelagoLogo", 50);
+                    vMapIndicator.SetActive(true);
+                    Vector3 oldPos = vMapIndicator.transform.localPosition;
                     oldPos.x += 800;
                     oldPos.y -= 200;
-                    BloonsArchipelago.vMapIndicator.transform.localPosition = oldPos;
+                    vMapIndicator.transform.localPosition = oldPos;
+                    BloonsArchipelago.vMapIndicators.Add(vMapIndicator);
                 }
             }
         }
@@ -36,7 +38,11 @@ namespace BloonsArchipelago.Patches.MapMenu
         [HarmonyPrefix]
         private static void Prefix()
         {
-            BloonsArchipelago.vMapIndicator.Destroy();
+            foreach (GameObject indicator in BloonsArchipelago.vMapIndicators)
+            {
+                indicator.Destroy();
+            }
+            BloonsArchipelago.vMapIndicators.Clear();
         }
     }
 
@@ -46,7 +52,11 @@ namespace BloonsArchipelago.Patches.MapMenu
         [HarmonyPrefix]
         private static void Prefix()
         {
-            BloonsArchipelago.vMapIndicator.Destroy();
+            foreach (GameObject indicator in BloonsArchipelago.vMapIndicators)
+            {
+                indicator.Destroy();
+            }
+            BloonsArchipelago.vMapIndicators.Clear();
         }
     }
 
@@ -56,7 +66,11 @@ namespace BloonsArchipelago.Patches.MapMenu
         [HarmonyPrefix]
         private static void Prefix()
         {
-            BloonsArchipelago.vMapIndicator.Destroy();
+            foreach (GameObject indicator in BloonsArchipelago.vMapIndicators)
+            {
+                indicator.Destroy();
+            }
+            BloonsArchipelago.vMapIndicators.Clear();
         }
     }
 }

@@ -28,7 +28,7 @@ public class BloonsArchipelago : BloonsTD6Mod
 
     public static SessionHandler sessionHandler = new();
 
-    public static GameObject vMapIndicator = new();
+    public static List<GameObject> vMapIndicators = new();
 
     // Mod Settings; Used for Connection Purposes
     static readonly ModSettingString url = "archipelago.gg";
