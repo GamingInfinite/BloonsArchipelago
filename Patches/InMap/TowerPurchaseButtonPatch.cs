@@ -1,4 +1,5 @@
-﻿using BTD_Mod_Helper.Extensions;
+﻿using BTD_Mod_Helper;
+using BTD_Mod_Helper.Extensions;
 using HarmonyLib;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame.StoreMenu;
@@ -25,13 +26,24 @@ namespace BloonsArchipelago.Patches.InMap
                 else if (__instance.cost <= InGame.instance.GetCash())
                 {
                     __result = TowerPurchaseLockState.Available;
+                    return false;
                 }
                 else
                 {
                     __result = TowerPurchaseLockState.NotEnoughCash;
+                    return false;
                 }
             }
             return true;
         }
+
+        //[HarmonyPostfix]
+        //private static void Postfix(TowerPurchaseButton __instance, TowerPurchaseLockState __result)
+        //{
+        //    if (__result == TowerPurchaseLockState.HasntBeenAquired)
+        //    {
+        //        ModHelper.Msg<BloonsArchipelago>(__instance.towerModel.name);
+        //    }
+        //}
     }
 }
