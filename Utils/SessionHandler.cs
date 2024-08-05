@@ -111,7 +111,7 @@ namespace BloonsArchipelago.Utils
             //Setup for XP Passthrough;
             if (session.DataStorage["XP"])
             {
-                XPTracker = new ArchipelagoXP(session.DataStorage["Level"], session.DataStorage["XP"], (Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
+                XPTracker = new ArchipelagoXP(session.DataStorage["Level-" + PlayerSlotName()], session.DataStorage["XP-" + PlayerSlotName()], (Int64)slotData["staticXPReq"], (Int64)slotData["maxLevel"]);
             }
             else
             {
@@ -152,6 +152,13 @@ namespace BloonsArchipelago.Utils
                 }
             }
             return mapDetails.ToArray();
+        }
+
+        public string PlayerSlotName()
+        {
+            int slot = session.ConnectionInfo.Slot;
+            string name = session.Players.GetPlayerName(slot);
+            return name;
         }
     }
 }
